@@ -1,4 +1,5 @@
-#include "opencv2/opencv.hpp"
+
+#include "mylib.h"
 
 
 using namespace cv;
@@ -40,20 +41,59 @@ cv::VideoCapture cap(pipeline, cv::CAP_GSTREAMER);
 	while(1){
 
 	    Mat frame;
+	    Mat output;
 	    // Capture frame-by-frame
 	    cap >> frame;
-
+	  
 	    // If the frame is empty, break immediately
 	    if (frame.empty())
 	      break;
+char c=(char)waitKey(25);
+	if ( c == 'a')//seuillage rouge -> jaune
+	{
+
+	
+	 output = seuillage_cv(frame);
+	}
+	else if ( c == 'b')//filtre gauss
+	{
+
+	//Mat tempim;
+	 //tempim = bandw_cv(frame);
+	GaussianBlur( frame, output, Size( 9, 9 ), 10.0);	
+	}
+else if ( c == 'c')//filtre gauss+contour
+	{
+
+	Mat tempim;
+	 tempim = bandw_cv(frame);
+	GaussianBlur( tempim, output, Size( 3, 3 ), 10.0);	
+	}
+else if ( c == 'd')//filtre contour
+	{
+
+	//Mat tempim;
+	 output = bandw_cv(frame);
+	//GaussianBlur( tempim, output, Size( 3, 3 ), 10.0);	
+	}
+else if ( c == 27) // si on appuie echap, frame se ferme
+{
+break;}
+else      // si aucune touche est appuyée , image de base cam
+	{
+
+	 output = frame;
+	}
+
+//output = seuillage_cv(frame);
 
 	    // Display the resulting frame
-	    imshow( "Frame", frame );
-
+//imshow( "Frame", frame);
+	    imshow( "Frame", output);
+		
 	    // Press  ESC on keyboard to exit
-	    char c=(char)waitKey(25);
-	    if(c==27)
-	      break;
+	    
+	    
 	  }
 
 	  // When everything done, release the video capture object
@@ -64,3 +104,4 @@ cv::VideoCapture cap(pipeline, cv::CAP_GSTREAMER);
 
 	  return 0;
 }
+

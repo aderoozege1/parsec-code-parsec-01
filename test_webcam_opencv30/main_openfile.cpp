@@ -21,7 +21,7 @@ int main(int, char**)
 		Mat vol_out;
 
 
-		vol_in = imread("/home/parsec_01/TP_GPU/TP_seuillage/Images/ferrari.jpg");
+		vol_in = imread("images.jpeg");
 
 		vol_out.create(vol_in.rows,vol_in.cols,CV_8UC(3));
 
