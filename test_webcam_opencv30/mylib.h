@@ -9,10 +9,11 @@
 #include "opencv2/opencv.hpp"
 
 // Prototype
+
 using namespace cv;
 Mat bandw_cv(Mat din);
 Mat seuillage_cv(Mat vin);
-//Mat seuillage2_cv(Mat pin);
+
 #endif
 
 

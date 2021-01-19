@@ -16,7 +16,7 @@ int main(int, char**)
 
 { 
 
- int capture_width = 1280 ;
+    int capture_width = 1280 ;
     int capture_height = 720 ;
     int display_width = 1280 ;
     int display_height = 720 ;
@@ -31,9 +31,9 @@ int main(int, char**)
 	flip_method);
     std::cout << "Using pipeline: \n\t" << pipeline << "\n";
 
-cv::VideoCapture cap(pipeline, cv::CAP_GSTREAMER);
-	//VideoCapture cap(); // open the default camera
-	if(!cap.isOpened())  // check if we succeeded
+cv::VideoCapture cap(pipeline, cv::CAP_GSTREAMER); // open the default camera
+	
+        if(!cap.isOpened())                        // check if we succeeded
 		return -1;
 
 
@@ -48,50 +48,49 @@ cv::VideoCapture cap(pipeline, cv::CAP_GSTREAMER);
 	    // If the frame is empty, break immediately
 	    if (frame.empty())
 	      break;
-char c=(char)waitKey(25);
-	if ( c == 'a')//seuillage rouge -> jaune
-	{
 
-	
-	 output = seuillage_cv(frame);
-	}
-	else if ( c == 'b')//filtre gauss
-	{
+		char c=(char)waitKey(25);// détection appui touche clavier
 
-	//Mat tempim;
-	 //tempim = bandw_cv(frame);
-	GaussianBlur( frame, output, Size( 9, 9 ), 10.0);	
-	}
-else if ( c == 'c')//filtre gauss+contour
-	{
 
-	Mat tempim;
-	 tempim = bandw_cv(frame);
-	GaussianBlur( tempim, output, Size( 3, 3 ), 10.0);	
-	}
-else if ( c == 'd')//filtre contour
-	{
+		if      ( c == 'a')      //seuillage rouge -> jaune 
 
-	//Mat tempim;
-	 output = bandw_cv(frame);
-	//GaussianBlur( tempim, output, Size( 3, 3 ), 10.0);	
-	}
-else if ( c == 27) // si on appuie echap, frame se ferme
-{
-break;}
-else      // si aucune touche est appuyée , image de base cam
-	{
+			{
+			 output = seuillage_cv(frame);
+			}
 
-	 output = frame;
-	}
+		else if ( c == 'b')      //filtre gauss
+			{
+			 GaussianBlur( frame, output, Size( 9, 9 ),10.0); // peut précis, afin de créer un effet de flou	
+			}
 
-//output = seuillage_cv(frame);
+		else if ( c == 'c')      //filtre gauss+contour (débruitage)
+			{
+		         Mat tempim;               // création d'une image temporaire 
+			 tempim = bandw_cv(frame); // detection de contour -> stockage dans tempim
+			 GaussianBlur( tempim, output, Size( 3, 3 ), 10.0); // débruitage avec un filtre gaussien 	
+			}
 
-	    // Display the resulting frame
-//imshow( "Frame", frame);
+		else if ( c == 'd')      //filtre contour sans débruitage
+			{
+			 output = bandw_cv(frame);	
+			}
+
+		else if ( c == 27)       // si on appuie echap, frame se ferme
+			{
+			 break;
+		         }
+
+		else                     // si aucune touche est appuyée -> pas de traitement -> image vierge
+			{
+			 output = frame;
+			}
+
+
+	    // affichage image filtrée
+
 	    imshow( "Frame", output);
 		
-	    // Press  ESC on keyboard to exit
+	    // Appuyez sur echap pour quitter
 	    
 	    
 	  }
